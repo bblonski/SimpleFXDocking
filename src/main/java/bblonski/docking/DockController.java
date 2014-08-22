@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -40,12 +41,15 @@ public class DockController {
         return new Dock(this);
     }
 
+    static int i = 1;
+
     public Dockable createDockable(String text, Dock dock) {
         final Dockable dockable = new Dockable(text, new Pane(), dock, this);
         if(dock.getSelected() == null) {
             dock.setSelected(dockable);
         }
         dockable.getContent().setStyle("-fx-border-width: 1; -fx-border-color: darkblue");
+        dockable.getContent().getChildren().add(new Label("pane " + i++ ));
         content.put(dockable, dockable.getContent());
         return dockable;
     }

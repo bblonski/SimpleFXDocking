@@ -35,10 +35,10 @@ public class DockingTest extends Application {
         dock2.setOrientation(Orientation.VERTICAL);
         controller.createDockable("Test 4", dock2);
         controller.createDockable("Test 5", dock2);
-        left.getChildren().addAll(dock2.getArea(), dock2);
+        left.getChildren().addAll(dock2, dock2.getArea());
         bottom.getChildren().addAll(dock.getArea(), dock);
-        parent.setLeft(dock2);
-        parent.setBottom(dock);
+        parent.setLeft(left);
+        parent.setBottom(bottom);
         parent.setCenter(new Pane());
         final Scene scene = new Scene(parent, 800, 600);
         primaryStage.setScene(scene);

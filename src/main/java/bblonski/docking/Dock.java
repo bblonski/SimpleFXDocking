@@ -4,20 +4,21 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 
 /**
  * Created by bblonski on 8/22/2014.
  */
 public class Dock extends FlowPane {
-    private DockController controller;
     private final ObjectProperty<Dockable> selected = new SimpleObjectProperty<>();
     private final DockContentArea area = new DockContentArea();
 
     Dock(DockController controller) {
-        this.controller = controller;
         controller.registerDock(this);
         setStyle("-fx-border-width: 1; -fx-border-color: red");
+        area.setStyle("-fx-border-color: yellow; -fx-border-width: 1");
         getStyleClass().add("dock");
         selected.addListener(new ChangeListener<Dockable>() {
             @Override

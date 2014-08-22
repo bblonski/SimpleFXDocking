@@ -48,7 +48,7 @@ public class Dockable extends Group {
         StackPane.setAlignment(dragText, Pos.CENTER);
         dragStagePane.getChildren().add(dragText);
         dragStage.setScene(new Scene(dragStagePane));
-        button.setOnMouseClicked(e -> dock.setSelected(this));
+        button.setOnMouseClicked(e -> getDock().setSelected(this));
         button.setOnMouseDragged(t -> {
             dragStage.setWidth(button.getWidth() + 10);
             dragStage.setHeight(button.getHeight() + 10);
