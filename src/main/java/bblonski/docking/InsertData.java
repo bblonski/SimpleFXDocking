@@ -1,3 +1,5 @@
+package bblonski.docking;
+
 import javafx.scene.control.TabPane;
 
 /**

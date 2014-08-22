@@ -1,3 +1,5 @@
+package bblonski.docking;
+
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -51,7 +52,7 @@ public class Dockable extends Group {
             dragStage.setY(t.getScreenY());
             dragStage.show();
             Point2D screenPoint = new Point2D(t.getScreenX(), t.getScreenY());
-//            InsertData data = getInsertData(screenPoint, controller);
+//            bblonski.docking.InsertData data = getInsertData(screenPoint, controller);
 //            if (data == null || data.getInsertPane().getTabs().isEmpty()) {
 //                controller.getDockStage().hide();
 //            } else {
@@ -114,20 +115,20 @@ public class Dockable extends Group {
                         this.setDock(d);
                     }
                 }
-//                InsertData insertData = getInsertData(screenPoint);
+//                bblonski.docking.InsertData insertData = getInsertData(screenPoint);
 //                if (insertData != null) {
 //                    int addIndex = insertData.getIndex();
 //                    if (oldTabPane == insertData.getInsertPane() && oldTabPane.getTabs().size() == 1) {
 //                        return;
 //                    }
-//                    oldTabPane.getTabs().remove(DraggableTab.this);
+//                    oldTabPane.getTabs().remove(bblonski.docking.DraggableTab.this);
 //                    if (oldIndex < addIndex && oldTabPane == insertData.getInsertPane()) {
 //                        addIndex--;
 //                    }
 //                    if (addIndex > insertData.getInsertPane().getTabs().size()) {
 //                        addIndex = insertData.getInsertPane().getTabs().size();
 //                    }
-//                    insertData.getInsertPane().getTabs().add(addIndex, DraggableTab.this);
+//                    insertData.getInsertPane().getTabs().add(addIndex, bblonski.docking.DraggableTab.this);
 //                    insertData.getInsertPane().selectionModelProperty().get().select(addIndex);
 //                    return;
 //                }
@@ -138,8 +139,8 @@ public class Dockable extends Group {
 //                final TabPane pane = new TabPane();
 //                tabPanes.add(pane);
 //                newStage.setOnHiding(t1 -> tabPanes.remove(pane));
-//                getTabPane().getTabs().remove(DraggableTab.this);
-//                pane.getTabs().add(DraggableTab.this);
+//                getTabPane().getTabs().remove(bblonski.docking.DraggableTab.this);
+//                pane.getTabs().add(bblonski.docking.DraggableTab.this);
 //                pane.getTabs().addListener((ListChangeListener.Change<? extends Tab> change) -> {
 //                    if (pane.getTabs().isEmpty()) {
 //                        newStage.hide();

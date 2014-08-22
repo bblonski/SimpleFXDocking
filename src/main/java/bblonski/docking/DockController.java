@@ -1,3 +1,5 @@
+package bblonski.docking;
+
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
@@ -33,7 +35,7 @@ public class DockController {
         return new Dock(this);
     }
 
-    Dockable createDockable(String text, Dock dock) {
+    public Dockable createDockable(String text, Dock dock) {
         return new Dockable(text, dock, this);
     }
 

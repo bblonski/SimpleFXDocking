@@ -1,3 +1,5 @@
+package bblonski.docking;
+
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;

@@ -1,6 +1,7 @@
+import bblonski.docking.Dock;
+import bblonski.docking.DockController;
 import javafx.application.Application;
 import javafx.geometry.Orientation;
-import javafx.geometry.Point3D;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
