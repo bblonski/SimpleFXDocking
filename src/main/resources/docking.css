@@ -1,0 +1,24 @@
+.tab-header-area {
+    -fx-padding: 0 0 0 0;
+    /*-fx-font-size: 12;*/
+}
+
+.dockable {
+    -fx-background-insets: 0 1 1 0, 1 2 1 1, 2 3 1 2;
+    -fx-background-radius: 5 5 0 0, 4 4 0 0, 3 3 0 0;
+    -fx-padding: 0.083333em 0.5em 0.083333em 0.5em; /* 1 6 1 6 */
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+}
+
+
+.tab {
+    /* Fix toolbar crossplatform height issue */
+    -fx-padding: 0.083333em 0.5em 0.083333em 0.5em; /* 1 6 1 6 */
+    -fx-background-insets: 0, 0 1, 0 2;
+    -fx-background-radius: 2 2 0 0, 1 1 0 0;
+}
+
+.tab:selected .focus-indicator {
+    -fx-border-width: 1 0 0 0;
+
+}
