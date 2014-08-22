@@ -4,14 +4,18 @@ import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -21,6 +25,7 @@ public class DockController {
     private final Stage markerStage;
     private final Set<TabPane> tabPanes = new HashSet<>();
     private final Set<Dock> docks = new HashSet<>();
+    private final Map<Dockable, Pane> content = new HashMap<>();
 
     public DockController() {
         markerStage = new Stage();
@@ -36,7 +41,13 @@ public class DockController {
     }
 
     public Dockable createDockable(String text, Dock dock) {
-        return new Dockable(text, dock, this);
+        final Dockable dockable = new Dockable(text, new Pane(), dock, this);
+        if(dock.getSelected() == null) {
+            dock.setSelected(dockable);
+        }
+        dockable.getContent().setStyle("-fx-border-width: 1; -fx-border-color: darkblue");
+        content.put(dockable, dockable.getContent());
+        return dockable;
     }
 
     public TabPane createTabPane(Side side) {

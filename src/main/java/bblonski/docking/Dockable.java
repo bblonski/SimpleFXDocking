@@ -9,9 +9,11 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -26,9 +28,10 @@ public class Dockable extends Group {
     private Stage dragStage;
     private Text dragText;
     private ObjectProperty<Dock> dock = new SimpleObjectProperty<>();
+    private final Pane content;
 
-    Dockable(String text, Dock dock, DockController controller) {
-        super();
+    Dockable(String text, Pane content, Dock dock, DockController controller) {
+        this.content = content;
         button = new Button(text);
         getChildren().add(button);
         this.dock.set(dock);
@@ -45,6 +48,7 @@ public class Dockable extends Group {
         StackPane.setAlignment(dragText, Pos.CENTER);
         dragStagePane.getChildren().add(dragText);
         dragStage.setScene(new Scene(dragStagePane));
+        button.setOnMouseClicked(e -> dock.setSelected(this));
         button.setOnMouseDragged(t -> {
             dragStage.setWidth(button.getWidth() + 10);
             dragStage.setHeight(button.getHeight() + 10);
@@ -173,5 +177,9 @@ public class Dockable extends Group {
                 node.localToScene(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMinY()).getY() + node.getScene().getWindow().getY(),
                 node.getWidth(),
                 node.getHeight());
+    }
+
+    public Pane getContent() {
+        return content;
     }
 }

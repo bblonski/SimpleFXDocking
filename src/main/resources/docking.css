@@ -18,6 +18,10 @@
     -fx-background-radius: 2 2 0 0, 1 1 0 0;
 }
 
+.selected {
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-background
+}
+
 .tab:selected .focus-indicator {
     -fx-border-width: 1 0 0 0;
 
