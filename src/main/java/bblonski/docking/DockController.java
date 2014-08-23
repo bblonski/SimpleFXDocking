@@ -4,10 +4,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -25,7 +21,6 @@ import java.util.Set;
  */
 public class DockController {
     private final Stage markerStage;
-    private final Set<TabPane> tabPanes = new HashSet<>();
     private final Set<Dock> docks = new HashSet<>();
     private final Map<Dockable, Pane> content = new HashMap<>();
 
@@ -38,37 +33,18 @@ public class DockController {
         markerStage.setScene(new Scene(markerStack));
     }
 
-    public Dock createDock() {
-        return new Dock(this, Side.TOP);
-    }
-
     public Dock createDock(Side side) {
         return new Dock(this, side);
     }
 
-    static int i = 1;
-
     public Dockable createDockable(String text, Dock dock) {
-        final Dockable dockable = new Dockable(text, dock, this);
+        final Dockable dockable = new Dockable(text, dock);
         if(dock.getSelected() == null) {
             dock.setSelected(dockable);
         }
 //        dockable.getContent().setStyle("-fx-border-width: 1; -fx-border-color: darkblue");
-        dockable.getContent().getChildren().add(new Label("pane " + i++));
         content.put(dockable, dockable.getContent());
         return dockable;
-    }
-
-    public TabPane createTabPane(Side side) {
-        final TabPane tabPane = new TabPane();
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        tabPane.setSide(side);
-        tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING);
-        final DraggableTab tab = new DraggableTab("Test", this);
-        tabPane.getTabs().addAll(tab);
-        registerTabPane(tabPane);
-        tabPane.setRotateGraphic(true);
-        return tabPane;
     }
 
     Stage getDockStage() {
@@ -77,14 +53,6 @@ public class DockController {
 
     Set<Dock> getAllDocks() {
         return docks;
-    }
-
-    void registerTabPane(TabPane tabPane) {
-       getTabPanes().add(tabPane);
-    }
-
-    Set<TabPane> getTabPanes() {
-        return tabPanes;
     }
 
     private Rectangle2D getAbsoluteRect(Control node) {

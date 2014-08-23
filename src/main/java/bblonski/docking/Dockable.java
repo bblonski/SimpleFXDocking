@@ -17,10 +17,9 @@ public class Dockable extends Group {
     private final DockPane content;
     private String title;
 
-    Dockable(String text, Dock dock, DockController controller) {
-        this.content = new DockPane(this);
+    Dockable(String text, Dock dock) {
         this.title = text;
-        button = new Button(text);
+        button = new Button(title);
         getChildren().add(button);
         this.dock.set(dock);
         dock.getChildren().add(this);
@@ -40,8 +39,8 @@ public class Dockable extends Group {
 
         Stage stage = new Stage();
         button.setOnMouseDragged(new DraggableMouseDragHandler(this, stage));
-
-        button.setOnMouseReleased(new DraggableMouseReleaseHandler(this, controller, stage));
+        button.setOnMouseReleased(new DraggableMouseReleaseHandler(this, stage));
+        this.content = new DockPane(this);
     }
 
     Control getControl() {

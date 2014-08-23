@@ -2,6 +2,8 @@ package bblonski.docking;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -19,6 +21,7 @@ class DraggableMouseDragHandler implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent t) {
+//        dragStage.setScene(new Scene(new Label(dockable.getTitle())));
         dragStage.setWidth(dockable.getControl().getWidth() + 10);
         dragStage.setHeight(dockable.getControl().getHeight() + 10);
         dragStage.setX(t.getScreenX());

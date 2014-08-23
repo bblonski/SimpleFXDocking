@@ -24,18 +24,15 @@ import javafx.util.Duration;
 */
 public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
     private Dockable dockable;
-    private final DockController controller;
     private Stage dragStage;
-    private Text dragText;
 
-    public DraggableMouseReleaseHandler(Dockable dockable, DockController controller, Stage dragStage) {
+    public DraggableMouseReleaseHandler(Dockable dockable, Stage dragStage) {
         this.dockable = dockable;
-        this.controller = controller;
         this.dragStage = dragStage;
         dragStage.initStyle(StageStyle.UNDECORATED);
         StackPane dragStagePane = new StackPane();
         dragStagePane.getStyleClass().addAll("tab", "dockable");
-        dragText = new Text(dockable.getTitle());
+        Text dragText = new Text(dockable.getTitle());
         StackPane.setAlignment(dragText, Pos.CENTER);
         dragStagePane.getChildren().add(dragText);
         dragStage.setScene(new Scene(dragStagePane));
@@ -43,13 +40,13 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent t) {
-        controller.getDockStage().hide();
+        dockable.getDock().getDockController().getDockStage().hide();
         dragStage.hide();
         if (!t.isStillSincePress()) {
             Point2D screenPoint = new Point2D(t.getScreenX(), t.getScreenY());
             Dock oldDock = dockable.getDock();
             int oldIndex = oldDock.getChildren().indexOf(dockable);
-            for (Dock d : controller.getAllDocks()) {
+            for (Dock d : dockable.getDock().getDockController().getAllDocks()) {
                 final boolean contains = d.localToScreen(d.getLayoutBounds()).contains(screenPoint);
                 if (contains) {
                     oldDock.getChildren().remove(dockable);
@@ -59,25 +56,23 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                     if (d.getChildren().size() > 0) {
                         dockable.setManaged(false);
                         dockable.setVisible(false);
-                        for (Node n : d.getChildren()) {
-                            if (n instanceof Dockable) {
-                                final Control control = ((Dockable) n).getControl();
-                                final TranslateTransition translateTransition =
-                                        new TranslateTransition(Duration.seconds(0.2), n);
-                                if (d.getOrientation() == Orientation.VERTICAL) {
-                                    translateTransition.setByY(control.getWidth());
-                                } else {
-                                    translateTransition.setByX(control.getWidth());
-                                }
-                                translateTransition.setOnFinished(e -> {
-                                    n.setTranslateX(0);
-                                    n.setTranslateY(0);
-                                    dockable.setManaged(true);
-                                    dockable.setVisible(true);
-                                });
-                                translateTransition.play();
+                        d.getChildren().stream().filter(n -> n instanceof Dockable).forEach(n -> {
+                            final Control control = ((Dockable) n).getControl();
+                            final TranslateTransition translateTransition =
+                                    new TranslateTransition(Duration.seconds(0.2), n);
+                            if (d.getOrientation() == Orientation.VERTICAL) {
+                                translateTransition.setByY(control.getWidth());
+                            } else {
+                                translateTransition.setByX(control.getWidth());
                             }
-                        }
+                            translateTransition.setOnFinished(e -> {
+                                n.setTranslateX(0);
+                                n.setTranslateY(0);
+                                dockable.setManaged(true);
+                                dockable.setVisible(true);
+                            });
+                            translateTransition.play();
+                        });
                     }
                     if (d.getSide() == Side.LEFT) {
                         dockable.getControl().setRotate(-90);

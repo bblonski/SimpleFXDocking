@@ -19,8 +19,10 @@ public class Dock extends FlowPane {
     private final ObjectProperty<Dockable> selected = new SimpleObjectProperty<>();
     private final DockContentArea area;
     private final Side side;
+    private final DockController dockController;
 
     Dock(DockController controller, Side side) {
+        this.dockController = controller;
         this.side = side;
         area = new DockContentArea(side);
         controller.registerDock(this);
@@ -42,6 +44,10 @@ public class Dock extends FlowPane {
                 newValue.getControl().getStyleClass().add("selected");
             }
         });
+    }
+
+    public DockController getDockController() {
+        return dockController;
     }
 
     public Side getSide() {
