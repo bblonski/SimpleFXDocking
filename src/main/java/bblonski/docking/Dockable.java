@@ -122,8 +122,10 @@ public class Dockable extends Group {
                                 }
                             }
                         }
-                        if (d.getOrientation() == Orientation.VERTICAL) {
+                        if (d.getSide() == Side.LEFT) {
                             getControl().setRotate(-90);
+                        } else if(d.getSide() == Side.RIGHT) {
+                            getControl().setRotate(90);
                         } else {
                             getControl().setRotate(0);
                         }
