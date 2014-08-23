@@ -1,14 +1,10 @@
 import bblonski.docking.Dock;
 import bblonski.docking.DockController;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Orientation;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -52,7 +48,7 @@ public class DockingTest extends Application {
         parent.setTop(top);
         final Pane center = new Pane();
         parent.setCenter(center);
-        final Scene scene = new Scene(parent, 800, 600);
+        final Scene scene = new Scene(parent, 1024, 800);
         primaryStage.setScene(scene);
         BorderPane.setAlignment(right, Pos.CENTER_RIGHT);
         dockRight.getArea().maxWidthProperty().bind(
@@ -69,15 +65,19 @@ public class DockingTest extends Application {
                         .subtract(dockLeft.widthProperty())
                         .subtract(1)
         );
+        scene.getStylesheets().addAll("docking.css");
+        primaryStage.show();
+        dockTop.getArea().maxHeightProperty().bind(
+                parent.heightProperty()
+                        .subtract(bottom.heightProperty())
+                        .subtract(dockTop.getHeight())
+        );
         dockBottom.getArea().maxHeightProperty().bind(
                 parent.heightProperty()
                         .subtract(top.heightProperty())
-                        .subtract(center.minHeightProperty())
-                        .subtract(dockBottom.heightProperty())
-                        .subtract(1)
+                        .subtract(dockBottom.getHeight())
+
         );
-        scene.getStylesheets().addAll("docking.css");
-        primaryStage.show();
     }
 
 }

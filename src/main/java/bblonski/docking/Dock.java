@@ -24,10 +24,9 @@ public class Dock extends FlowPane {
         this.side = side;
         area = new DockContentArea(side);
         controller.registerDock(this);
-        setStyle("-fx-border-width: 1; -fx-border-color: red");
-        area.setStyle("-fx-border-color: yellow; -fx-border-width: 1");
+//        setStyle("-fx-border-width: 1; -fx-border-color: red");
+//        area.setStyle("-fx-border-color: yellow; -fx-border-width: 1");
         getStyleClass().add("dock");
-        setMinSize(3,3);
         if(side == Side.LEFT || side == Side.RIGHT) {
             setOrientation(Orientation.VERTICAL);
         }

@@ -53,7 +53,7 @@ public class DockController {
         if(dock.getSelected() == null) {
             dock.setSelected(dockable);
         }
-        dockable.getContent().setStyle("-fx-border-width: 1; -fx-border-color: darkblue");
+//        dockable.getContent().setStyle("-fx-border-width: 1; -fx-border-color: darkblue");
         dockable.getContent().getChildren().add(new Label("pane " + i++));
         content.put(dockable, dockable.getContent());
         return dockable;

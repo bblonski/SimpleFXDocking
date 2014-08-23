@@ -1,5 +1,6 @@
 package bblonski.docking;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,21 +15,17 @@ import javafx.scene.layout.VBox;
 public class DockPane extends VBox {
 
     DockPane(Dockable dockable) {
-        getStyleClass().add("titled-pane");
         final HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.getStyleClass().add("title");
         final Label title = new Label("Title");
         title.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(title, Priority.ALWAYS);
-        final Button button = new Button();
-        button.setOnAction(e -> {
-            dockable.getDock().setSelected(null);
-        });
-        button.setMaxHeight(5);
+        final Button button = new Button("X");
+        button.setOnAction(e -> dockable.getDock().setSelected(null));
         button.setStyle("-fx-font-size: 8");
         hBox.getChildren().addAll(title, button);
-        hBox.getStyleClass().addAll("titled-pane");
-        getChildren().addAll(hBox, new StackPane());
+        final StackPane stackPane = new StackPane();
+        getChildren().addAll(hBox, stackPane);
     }
 }

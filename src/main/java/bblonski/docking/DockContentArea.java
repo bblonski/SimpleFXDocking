@@ -1,44 +1,47 @@
 package bblonski.docking;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Orientation;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 /**
  * Created by bblonski on 8/22/2014.
  */
-public class DockContentArea extends StackPane {
+public class DockContentArea extends BorderPane {
+    private final Side side;
     private boolean expanded = true;
-    private final Separator dragger;
+    private final Region dragger;
 
     DockContentArea(Side side) {
-        dragger = new Separator(Orientation.VERTICAL);
+        dragger = new Region();
+        dragger.getStyleClass().add("dragger");
+        dragger.setMinSize(4, 4);
+        this.side = side;
         switch (side) {
             case LEFT:
                 StackPane.setAlignment(dragger, Pos.CENTER_RIGHT);
+                setRight(dragger);
                 dragger.setOnMouseEntered(e -> getScene().setCursor(Cursor.E_RESIZE));
                 break;
             case RIGHT:
+                setLeft(dragger);
                 StackPane.setAlignment(dragger, Pos.CENTER_LEFT);
                 dragger.setOnMouseEntered(e -> getScene().setCursor(Cursor.W_RESIZE));
                 BorderPane.setAlignment(this, Pos.TOP_RIGHT);
                 break;
             case BOTTOM:
+                setTop(dragger);
                 StackPane.setAlignment(dragger, Pos.TOP_CENTER);
-                dragger.setOrientation(Orientation.HORIZONTAL);
                 dragger.setOnMouseEntered(e -> getScene().setCursor(Cursor.N_RESIZE));
                 break;
             case TOP:
+                setBottom(dragger);
                 StackPane.setAlignment(dragger, Pos.BOTTOM_CENTER);
-                dragger.setOrientation(Orientation.HORIZONTAL);
                 dragger.setOnMouseEntered(e -> getScene().setCursor(Cursor.S_RESIZE));
                 break;
         }
@@ -69,8 +72,7 @@ public class DockContentArea extends StackPane {
     }
 
     public void setContent(Node node) {
-        getChildren().clear();
-        getChildren().addAll(node, dragger);
+        setCenter(node);
     }
 
 }
