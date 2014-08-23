@@ -62,6 +62,10 @@ public class DockController {
                 node.getHeight());
     }
 
+    void removeDock(Dock dock) {
+        docks.remove(dock);
+    }
+
     void registerDock(Dock dock) {
         docks.add(dock);
     }

@@ -4,6 +4,7 @@ import bblonski.docking.Dock;
 import bblonski.docking.DockController;
 import bblonski.docking.Dockable;
 import javafx.animation.TranslateTransition;
+import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
@@ -45,9 +46,10 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
         if (!t.isStillSincePress()) {
             Point2D screenPoint = new Point2D(t.getScreenX(), t.getScreenY());
             Dock oldDock = dockable.getDock();
+            boolean contains = false;
             int oldIndex = oldDock.getChildren().indexOf(dockable);
             for (Dock d : dockable.getDock().getDockController().getAllDocks()) {
-                final boolean contains = d.localToScreen(d.getLayoutBounds()).contains(screenPoint);
+                contains = d.localToScreen(d.getLayoutBounds()).contains(screenPoint);
                 if (contains) {
                     oldDock.getChildren().remove(dockable);
                     if (dockable.equals(oldDock.getSelected())) {
@@ -74,16 +76,29 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                             translateTransition.play();
                         });
                     }
-                    if (d.getSide() == Side.LEFT) {
-                        dockable.getControl().setRotate(-90);
-                    } else if (d.getSide() == Side.RIGHT) {
-                        dockable.getControl().setRotate(90);
-                    } else {
-                        dockable.getControl().setRotate(0);
-                    }
                     d.getChildren().add(0, dockable);
                     dockable.setDock(d);
+                    break;
                 }
+            }
+            if(!contains) {
+                Stage stage = new Stage(StageStyle.UNDECORATED);
+                final Dock dock = dockable.getDock().getDockController().createDock(Side.TOP);
+                stage.setScene(new Scene(dock));
+                stage.getScene().getStylesheets().addAll("docking.css");
+                dock.getChildren().add(0, dockable);
+                dock.getChildren().addListener((ListChangeListener<Node>) c -> {
+                    if(dock.getChildren().isEmpty()) {
+                        dock.getDockController().removeDock(dock);
+                        stage.close();
+                    }
+                });
+                dock.setOnMouseDragged(e -> {
+                    stage.setX(e.getScreenX());
+                    stage.setY(e.getScreenY());
+                });
+                dockable.setDock(dock);
+                stage.show();
             }
 //                bblonski.docking.InsertData insertData = getInsertData(screenPoint);
 //                if (insertData != null) {

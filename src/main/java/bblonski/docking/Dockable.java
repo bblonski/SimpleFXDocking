@@ -13,7 +13,7 @@ import javafx.stage.Stage;
  */
 public class Dockable extends Group {
     private final Button button;
-    private ObjectProperty<Dock> dock = new SimpleObjectProperty<>();
+    private ObjectProperty<Dock> dockProperty = new SimpleObjectProperty<>();
     private final DockPane content;
     private String title;
 
@@ -21,13 +21,18 @@ public class Dockable extends Group {
         this.title = text;
         button = new Button(title);
         getChildren().add(button);
-        this.dock.set(dock);
+        this.dockProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue.getSide() == Side.LEFT) {
+                button.setRotate(-90);
+            } else if (newValue.getSide() == Side.RIGHT) {
+                button.setRotate(90);
+            } else {
+                button.setRotate(0);
+            }
+
+        });
+        this.dockProperty.set(dock);
         dock.getChildren().add(this);
-        if (dock.getSide() == Side.LEFT) {
-            button.setRotate(-90);
-        } else if (dock.getSide() == Side.RIGHT) {
-            button.setRotate(90);
-        }
         button.getStyleClass().addAll("tab", "dockable");
         button.setOnMouseClicked(e -> {
             if(this.equals(getDock().getSelected())) {
@@ -48,11 +53,11 @@ public class Dockable extends Group {
     }
 
     void setDock(Dock value) {
-        dock.set(value);
+        dockProperty.set(value);
     }
 
     Dock getDock() {
-        return dock.get();
+        return dockProperty.get();
     }
 
     private Rectangle2D getAbsoluteRect(Control node) {
