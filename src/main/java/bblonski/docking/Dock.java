@@ -17,11 +17,12 @@ import java.util.List;
  */
 public class Dock extends FlowPane {
     private final ObjectProperty<Dockable> selected = new SimpleObjectProperty<>();
-    private final DockContentArea area = new DockContentArea();
+    private final DockContentArea area;
     private final Side side;
 
     Dock(DockController controller, Side side) {
         this.side = side;
+        area = new DockContentArea(side);
         controller.registerDock(this);
         setStyle("-fx-border-width: 1; -fx-border-color: red");
         area.setStyle("-fx-border-color: yellow; -fx-border-width: 1");
@@ -30,19 +31,16 @@ public class Dock extends FlowPane {
         if(side == Side.LEFT || side == Side.RIGHT) {
             setOrientation(Orientation.VERTICAL);
         }
-        selected.addListener(new ChangeListener<Dockable>() {
-            @Override
-            public void changed(ObservableValue<? extends Dockable> observable, Dockable oldValue, Dockable newValue) {
-                if(oldValue != null) {
-                    oldValue.getControl().getStyleClass().remove("selected");
-                }
-                if(newValue == null) {
-                    getArea().setExpanded(false);
-                } else {
-                    getArea().setExpanded(true);
-                    area.setContent(newValue.getContent());
-                    newValue.getControl().getStyleClass().add("selected");
-                }
+        selected.addListener((observable, oldValue, newValue) -> {
+            if(oldValue != null) {
+                oldValue.getControl().getStyleClass().remove("selected");
+            }
+            if(newValue == null) {
+                getArea().setExpanded(false);
+            } else {
+                getArea().setExpanded(true);
+                area.setContent(newValue.getContent());
+                newValue.getControl().getStyleClass().add("selected");
             }
         });
     }
