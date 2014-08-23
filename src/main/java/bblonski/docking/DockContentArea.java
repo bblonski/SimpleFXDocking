@@ -1,11 +1,15 @@
 package bblonski.docking;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Separator;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -25,30 +29,32 @@ public class DockContentArea extends StackPane {
             case RIGHT:
                 StackPane.setAlignment(dragger, Pos.CENTER_LEFT);
                 dragger.setOnMouseEntered(e -> getScene().setCursor(Cursor.W_RESIZE));
+                BorderPane.setAlignment(this, Pos.TOP_RIGHT);
                 break;
             case BOTTOM:
-                StackPane.setAlignment(dragger, Pos.BOTTOM_CENTER);
-                dragger.setOrientation(Orientation.HORIZONTAL);
-                dragger.setOnMouseEntered(e -> getScene().setCursor(Cursor.S_RESIZE));
-                break;
-            case TOP:
                 StackPane.setAlignment(dragger, Pos.TOP_CENTER);
                 dragger.setOrientation(Orientation.HORIZONTAL);
                 dragger.setOnMouseEntered(e -> getScene().setCursor(Cursor.N_RESIZE));
                 break;
+            case TOP:
+                StackPane.setAlignment(dragger, Pos.BOTTOM_CENTER);
+                dragger.setOrientation(Orientation.HORIZONTAL);
+                dragger.setOnMouseEntered(e -> getScene().setCursor(Cursor.S_RESIZE));
+                break;
         }
         dragger.setOnMouseExited(e -> getScene().setCursor(Cursor.DEFAULT));
         dragger.setOnMouseDragged(e -> {
-            if(side == Side.LEFT) {
+            if (side == Side.LEFT) {
                 setPrefWidth(e.getSceneX() - localToScene(getLayoutBounds()).getMinX());
-            } else if(side == Side.RIGHT) {
+            } else if (side == Side.RIGHT) {
                 setPrefWidth(localToScene(getLayoutBounds()).getMaxX() - e.getSceneX());
-            } else if(side == Side.TOP) {
-                setPrefHeight(localToScene(getLayoutBounds()).getMaxY() - e.getSceneY());
-            } else if(side == Side.BOTTOM) {
+            } else if (side == Side.TOP) {
                 setPrefHeight(e.getSceneY() - localToScene(getLayoutBounds()).getMinY());
+            } else if (side == Side.BOTTOM) {
+                setPrefHeight(localToScene(getLayoutBounds()).getMaxY() - e.getSceneY());
             }
         });
+
     }
 
     public void setExpanded(boolean isExpanded) {
