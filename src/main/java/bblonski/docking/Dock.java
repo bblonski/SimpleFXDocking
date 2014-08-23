@@ -8,6 +8,8 @@ import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 
+import java.util.List;
+
 /**
  * Created by bblonski on 8/22/2014.
  */
@@ -26,9 +28,13 @@ public class Dock extends FlowPane {
                 if(oldValue != null) {
                     oldValue.getControl().getStyleClass().remove("selected");
                 }
-                area.getChildren().clear();
-                area.getChildren().add(newValue.getContent());
-                newValue.getControl().getStyleClass().add("selected");
+                if(newValue == null) {
+                    getArea().setExpanded(false);
+                } else {
+                    getArea().setExpanded(true);
+                    area.setContent(newValue.getContent());
+                    newValue.getControl().getStyleClass().add("selected");
+                }
             }
         });
     }

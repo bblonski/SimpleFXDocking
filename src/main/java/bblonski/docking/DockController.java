@@ -44,12 +44,12 @@ public class DockController {
     static int i = 1;
 
     public Dockable createDockable(String text, Dock dock) {
-        final Dockable dockable = new Dockable(text, new Pane(), dock, this);
+        final Dockable dockable = new Dockable(text, dock, this);
         if(dock.getSelected() == null) {
             dock.setSelected(dockable);
         }
         dockable.getContent().setStyle("-fx-border-width: 1; -fx-border-color: darkblue");
-        dockable.getContent().getChildren().add(new Label("pane " + i++ ));
+        dockable.getContent().getChildren().add(new Label("pane " + i++));
         content.put(dockable, dockable.getContent());
         return dockable;
     }

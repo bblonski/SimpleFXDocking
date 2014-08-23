@@ -3,6 +3,8 @@ package bblonski.docking;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -13,6 +15,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.control.Skin;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -28,15 +32,15 @@ public class Dockable extends Group {
     private Stage dragStage;
     private Text dragText;
     private ObjectProperty<Dock> dock = new SimpleObjectProperty<>();
-    private final Pane content;
+    private final DockPane content;
 
-    Dockable(String text, Pane content, Dock dock, DockController controller) {
-        this.content = content;
+    Dockable(String text, Dock dock, DockController controller) {
+        this.content = new DockPane(this);
         button = new Button(text);
         getChildren().add(button);
         this.dock.set(dock);
         dock.getChildren().add(this);
-        if(dock.getOrientation() == Orientation.VERTICAL) {
+        if (dock.getOrientation() == Orientation.VERTICAL) {
             button.setRotate(-90);
         }
         button.getStyleClass().addAll("tab", "dockable");
@@ -48,7 +52,13 @@ public class Dockable extends Group {
         StackPane.setAlignment(dragText, Pos.CENTER);
         dragStagePane.getChildren().add(dragText);
         dragStage.setScene(new Scene(dragStagePane));
-        button.setOnMouseClicked(e -> getDock().setSelected(this));
+        button.setOnMouseClicked(e -> {
+            if(this.equals(getDock().getSelected())) {
+                getDock().setSelected(null);
+            } else {
+                getDock().setSelected(this);
+            }
+        });
         button.setOnMouseDragged(t -> {
             dragStage.setWidth(button.getWidth() + 10);
             dragStage.setHeight(button.getHeight() + 10);
@@ -95,7 +105,7 @@ public class Dockable extends Group {
                                     final Control control = ((Dockable) n).getControl();
                                     final TranslateTransition translateTransition =
                                             new TranslateTransition(Duration.seconds(0.2), n);
-                                    if(d.getOrientation() == Orientation.VERTICAL) {
+                                    if (d.getOrientation() == Orientation.VERTICAL) {
                                         translateTransition.setByY(control.getWidth());
                                     } else {
                                         translateTransition.setByX(control.getWidth());
@@ -110,7 +120,7 @@ public class Dockable extends Group {
                                 }
                             }
                         }
-                        if(d.getOrientation() == Orientation.VERTICAL) {
+                        if (d.getOrientation() == Orientation.VERTICAL) {
                             getControl().setRotate(-90);
                         } else {
                             getControl().setRotate(0);
@@ -170,8 +180,9 @@ public class Dockable extends Group {
     }
 
     Dock getDock() {
-         return dock.get();
+        return dock.get();
     }
+
     private Rectangle2D getAbsoluteRect(Control node) {
         return new Rectangle2D(node.localToScene(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMinY()).getX() + node.getScene().getWindow().getX(),
                 node.localToScene(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMinY()).getY() + node.getScene().getWindow().getY(),
@@ -179,7 +190,7 @@ public class Dockable extends Group {
                 node.getHeight());
     }
 
-    public Pane getContent() {
+    public DockPane getContent() {
         return content;
     }
 }
