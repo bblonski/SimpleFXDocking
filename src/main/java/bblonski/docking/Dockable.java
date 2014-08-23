@@ -5,10 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Orientation;
-import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
+import javafx.geometry.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -40,8 +37,10 @@ public class Dockable extends Group {
         getChildren().add(button);
         this.dock.set(dock);
         dock.getChildren().add(this);
-        if (dock.getOrientation() == Orientation.VERTICAL) {
+        if (dock.getSide() == Side.LEFT) {
             button.setRotate(-90);
+        } else if (dock.getSide() == Side.RIGHT) {
+            button.setRotate(90);
         }
         button.getStyleClass().addAll("tab", "dockable");
         dragStage = new Stage();
@@ -97,6 +96,9 @@ public class Dockable extends Group {
                     final boolean contains = d.localToScreen(d.getLayoutBounds()).contains(screenPoint);
                     if (contains) {
                         oldDock.getChildren().remove(this);
+                        if(this.equals(oldDock.getSelected())) {
+                            oldDock.setSelected(null);
+                        }
                         if (d.getChildren().size() > 0) {
                             this.setManaged(false);
                             this.setVisible(false);

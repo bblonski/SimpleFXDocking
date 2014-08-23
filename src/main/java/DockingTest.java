@@ -31,13 +31,16 @@ public class DockingTest extends Application {
         controller.createDockable("Test 1", dock);
         controller.createDockable("Test 2", dock);
         controller.createDockable("Test 3", dock);
-        Dock dock2 = controller.createDock();
-        dock2.setOrientation(Orientation.VERTICAL);
+        Dock dock2 = controller.createDock(Side.LEFT);
         controller.createDockable("Test 4", dock2);
         controller.createDockable("Test 5", dock2);
+        Dock dockright = controller.createDock(Side.RIGHT);
+        HBox right = new HBox();
+        right.getChildren().addAll(dockright.getArea(), dockright);
         left.getChildren().addAll(dock2, dock2.getArea());
         bottom.getChildren().addAll(dock.getArea(), dock);
         parent.setLeft(left);
+        parent.setRight(right);
         parent.setBottom(bottom);
         parent.setCenter(new Pane());
         final Scene scene = new Scene(parent, 800, 600);

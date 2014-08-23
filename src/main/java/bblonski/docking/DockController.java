@@ -38,7 +38,11 @@ public class DockController {
     }
 
     public Dock createDock() {
-        return new Dock(this);
+        return new Dock(this, Side.TOP);
+    }
+
+    public Dock createDock(Side side) {
+        return new Dock(this, side);
     }
 
     static int i = 1;

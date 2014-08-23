@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Orientation;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 
@@ -16,12 +18,18 @@ import java.util.List;
 public class Dock extends FlowPane {
     private final ObjectProperty<Dockable> selected = new SimpleObjectProperty<>();
     private final DockContentArea area = new DockContentArea();
+    private final Side side;
 
-    Dock(DockController controller) {
+    Dock(DockController controller, Side side) {
+        this.side = side;
         controller.registerDock(this);
         setStyle("-fx-border-width: 1; -fx-border-color: red");
         area.setStyle("-fx-border-color: yellow; -fx-border-width: 1");
         getStyleClass().add("dock");
+        setMinSize(3,3);
+        if(side == Side.LEFT || side == Side.RIGHT) {
+            setOrientation(Orientation.VERTICAL);
+        }
         selected.addListener(new ChangeListener<Dockable>() {
             @Override
             public void changed(ObservableValue<? extends Dockable> observable, Dockable oldValue, Dockable newValue) {
@@ -37,6 +45,10 @@ public class Dock extends FlowPane {
                 }
             }
         });
+    }
+
+    public Side getSide() {
+        return side;
     }
 
     public void setSelected(Dockable value) {
