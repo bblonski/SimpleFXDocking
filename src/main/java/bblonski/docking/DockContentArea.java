@@ -1,6 +1,5 @@
 package bblonski.docking;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
