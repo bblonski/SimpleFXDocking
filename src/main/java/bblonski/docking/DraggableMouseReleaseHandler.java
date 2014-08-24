@@ -1,18 +1,13 @@
 package bblonski.docking;
 
-import bblonski.docking.Dock;
-import bblonski.docking.DockController;
-import bblonski.docking.Dockable;
 import javafx.animation.TranslateTransition;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Control;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -21,9 +16,11 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.util.Optional;
+
 /**
-* Created by bblonski on 8/23/2014.
-*/
+ * Created by bblonski on 8/23/2014.
+ */
 public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
     private Dockable dockable;
     private Stage dragStage;
@@ -47,42 +44,30 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
         if (!t.isStillSincePress()) {
             Point2D screenPoint = new Point2D(t.getScreenX(), t.getScreenY());
             Dock oldDock = dockable.getDock();
-            boolean contains = false;
-            int oldIndex = oldDock.getChildren().indexOf(dockable);
-            for (Dock d : dockable.getDock().getDockController().getAllDocks()) {
-                contains = d.localToScreen(d.getLayoutBounds()).contains(screenPoint);
-                if (contains) {
-                    oldDock.getChildren().remove(dockable);
-                    if (dockable.equals(oldDock.getSelected())) {
-                        oldDock.setSelected(null);
-                    }
-                    if (d.getChildren().size() > 0) {
-                        dockable.setManaged(false);
-                        dockable.setVisible(false);
-                        d.getChildren().stream().filter(n -> n instanceof Dockable).forEach(n -> {
-                            final Control control = ((Dockable) n).getControl();
-                            final TranslateTransition translateTransition =
-                                    new TranslateTransition(Duration.seconds(0.2), n);
-                            if (d.getOrientation() == Orientation.VERTICAL) {
-                                translateTransition.setByY(control.getWidth());
-                            } else {
-                                translateTransition.setByX(control.getWidth());
-                            }
-                            translateTransition.setOnFinished(e -> {
-                                n.setTranslateX(0);
-                                n.setTranslateY(0);
-                                dockable.setManaged(true);
-                                dockable.setVisible(true);
-                            });
-                            translateTransition.play();
-                        });
-                    }
-                    d.getChildren().add(0, dockable);
-                    dockable.setDock(d);
-                    break;
+            dockable.setTranslateX(0);
+            dockable.setTranslateY(0);
+            final Optional<Dock> dockOptional = dockable.getDock().getDockController().getAllDocks().stream().filter(dock ->
+                    dock.localToScreen(dock.getLayoutBounds()).contains(screenPoint)).findFirst();
+            if (dockOptional.isPresent()) {
+                oldDock.getChildren().remove(dockable);
+                if (dockable.equals(oldDock.getSelected())) {
+                    oldDock.setSelected(null);
                 }
+                dockOptional.get().getChildren().forEach(n -> {
+                    n.setTranslateX(0);
+                    n.setTranslateY(0);
+                });
+                final Optional<Node> nodeOptional = dockOptional.get().getChildren().stream().filter(node ->
+                                node.localToScreen(node.getLayoutBounds()).contains(screenPoint.getX() + node.getTranslateX(), screenPoint.getY() + node.getTranslateY())
+                ).findFirst();
+                if(nodeOptional.isPresent()) {
+                    dockOptional.get().getChildren().add(dockOptional.get().getChildren().indexOf(nodeOptional.get()), dockable);
+                } else {
+                    dockOptional.get().getChildren().add(dockable);
+                }
+                dockable.setDock(dockOptional.get());
             }
-            if(!contains) {
+            if (!dockOptional.isPresent()) {
                 Stage stage = new Stage(StageStyle.UNDECORATED);
                 final Dock dock = dockable.getDock().getDockController().createDock(Side.TOP);
                 VBox box = new VBox(dock, dock.getArea());
@@ -103,44 +88,6 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                 dockable.setDock(dock);
                 stage.show();
             }
-//                bblonski.docking.InsertData insertData = getInsertData(screenPoint);
-//                if (insertData != null) {
-//                    int addIndex = insertData.getIndex();
-//                    if (oldTabPane == insertData.getInsertPane() && oldTabPane.getTabs().size() == 1) {
-//                        return;
-//                    }
-//                    oldTabPane.getTabs().remove(bblonski.docking.DraggableTab.this);
-//                    if (oldIndex < addIndex && oldTabPane == insertData.getInsertPane()) {
-//                        addIndex--;
-//                    }
-//                    if (addIndex > insertData.getInsertPane().getTabs().size()) {
-//                        addIndex = insertData.getInsertPane().getTabs().size();
-//                    }
-//                    insertData.getInsertPane().getTabs().add(addIndex, bblonski.docking.DraggableTab.this);
-//                    insertData.getInsertPane().selectionModelProperty().get().select(addIndex);
-//                    return;
-//                }
-//                if (!detachable) {
-//                    return;
-//                }
-//                final Stage newStage = new Stage();
-//                final TabPane pane = new TabPane();
-//                tabPanes.add(pane);
-//                newStage.setOnHiding(t1 -> tabPanes.remove(pane));
-//                getTabPane().getTabs().remove(bblonski.docking.DraggableTab.this);
-//                pane.getTabs().add(bblonski.docking.DraggableTab.this);
-//                pane.getTabs().addListener((ListChangeListener.Change<? extends Tab> change) -> {
-//                    if (pane.getTabs().isEmpty()) {
-//                        newStage.hide();
-//                    }
-//                });
-//                newStage.setScene(new Scene(pane));
-//                newStage.initStyle(StageStyle.UTILITY);
-//                newStage.setX(t.getScreenX());
-//                newStage.setY(t.getScreenY());
-//                newStage.show();
-//                pane.requestLayout();
-//                pane.requestFocus();
         }
     }
 }
