@@ -1,6 +1,5 @@
 package bblonski.docking;
 
-import javafx.animation.TranslateTransition;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -14,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 
 import java.util.Optional;
 
@@ -60,7 +58,7 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                 final Optional<Node> nodeOptional = dockOptional.get().getChildren().stream().filter(node ->
                                 node.localToScreen(node.getLayoutBounds()).contains(screenPoint.getX() + node.getTranslateX(), screenPoint.getY() + node.getTranslateY())
                 ).findFirst();
-                if(nodeOptional.isPresent()) {
+                if (nodeOptional.isPresent()) {
                     dockOptional.get().getChildren().add(dockOptional.get().getChildren().indexOf(nodeOptional.get()), dockable);
                 } else {
                     dockOptional.get().getChildren().add(dockable);
@@ -68,10 +66,12 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                 dockable.setDock(dockOptional.get());
             }
             if (!dockOptional.isPresent()) {
-                Stage stage = new Stage(StageStyle.UNDECORATED);
+                Stage stage = new Stage();
                 final Dock dock = dockable.getDock().getDockController().createDock(Side.TOP);
                 VBox box = new VBox(dock, dock.getArea());
                 stage.setScene(new Scene(box));
+                stage.setX(screenPoint.getX());
+                stage.setY(screenPoint.getY());
                 stage.getScene().getStylesheets().addAll("docking.css");
                 dock.getChildren().add(0, dockable);
                 dock.setSelected(dockable);
@@ -82,8 +82,9 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                     }
                 });
                 dock.setOnMouseDragged(e -> {
-                    stage.setX(e.getScreenX());
-                    stage.setY(e.getScreenY());
+                    final Point2D delta = dock.localToScreen(0, 0).subtract(e.getScreenX(), e.getScreenY());
+                    stage.setX(e.getScreenX() - delta.getX());
+                    stage.setY(e.getScreenY() - delta.getY());
                 });
                 dockable.setDock(dock);
                 stage.show();

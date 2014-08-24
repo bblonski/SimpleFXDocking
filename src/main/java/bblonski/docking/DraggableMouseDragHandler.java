@@ -2,11 +2,9 @@ package bblonski.docking;
 
 import javafx.animation.TranslateTransition;
 import javafx.event.EventHandler;
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -33,8 +31,8 @@ class DraggableMouseDragHandler implements EventHandler<MouseEvent> {
     public void handle(MouseEvent t) {
         dragStage.setWidth(dockable.getControl().getWidth() + 10);
         dragStage.setHeight(dockable.getControl().getHeight() + 10);
-        dragStage.setX(t.getScreenX());
-        dragStage.setY(t.getScreenY());
+        dragStage.setX(t.getScreenX() - dragStage.getWidth() / 2);
+        dragStage.setY(t.getScreenY() - dragStage.getHeight() / 2);
         dragStage.show();
         Optional<Dock> previousDock = dockOptional;
         Point2D screenPoint = new Point2D(t.getScreenX(), t.getScreenY());
@@ -56,7 +54,7 @@ class DraggableMouseDragHandler implements EventHandler<MouseEvent> {
                 if (previousNode.isPresent()) {
                     nodeIndex = dockOptional.get().getChildren().indexOf(nodeOptional.get());
                     dockOptional.get().getChildren().subList(0, nodeIndex).stream().forEach(n -> {
-                        final TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.2),  n);
+                        final TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.2), n);
                         translateTransition.setToX(0);
                         translateTransition.setToY(0);
                         translateTransition.play();
