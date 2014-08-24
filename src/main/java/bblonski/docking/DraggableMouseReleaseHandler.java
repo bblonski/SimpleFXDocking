@@ -22,6 +22,8 @@ import java.util.Optional;
 public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
     private Dockable dockable;
     private Stage dragStage;
+    private Point2D offset;
+    private boolean sameDock;
 
     public DraggableMouseReleaseHandler(Dockable dockable, Stage dragStage) {
         this.dockable = dockable;
@@ -47,6 +49,7 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
             final Optional<Dock> dockOptional = dockable.getDock().getDockController().getAllDocks().stream().filter(dock ->
                     dock.localToScreen(dock.getLayoutBounds()).contains(screenPoint)).findFirst();
             if (dockOptional.isPresent()) {
+                sameDock = oldDock.equals(dockOptional.get());
                 oldDock.getChildren().remove(dockable);
                 if (dockable.equals(oldDock.getSelected())) {
                     oldDock.setSelected(null);
@@ -64,27 +67,29 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                     dockOptional.get().getChildren().add(dockable);
                 }
                 dockable.setDock(dockOptional.get());
-            }
-            if (!dockOptional.isPresent()) {
-                Stage stage = new Stage();
+            } else {
+                Stage stage = new Stage(StageStyle.UNDECORATED);
                 final Dock dock = dockable.getDock().getDockController().createDock(Side.TOP);
                 VBox box = new VBox(dock, dock.getArea());
                 stage.setScene(new Scene(box));
                 stage.setX(screenPoint.getX());
                 stage.setY(screenPoint.getY());
                 stage.getScene().getStylesheets().addAll("docking.css");
-                dock.getChildren().add(0, dockable);
+                dock.getChildren().add(dockable);
                 dock.setSelected(dockable);
                 dock.getChildren().addListener((ListChangeListener<Node>) c -> {
-                    if (dock.getChildren().isEmpty()) {
+                    if (dock.getChildren().isEmpty() && !sameDock) {
                         dock.getDockController().removeDock(dock);
                         stage.close();
                     }
                 });
+                dock.setOnMousePressed(e -> offset = new Point2D(e.getScreenX() - stage.getX(), e.getScreenY() - stage.getY()));
                 dock.setOnMouseDragged(e -> {
-                    final Point2D delta = dock.localToScreen(0, 0).subtract(e.getScreenX(), e.getScreenY());
-                    stage.setX(e.getScreenX() - delta.getX());
-                    stage.setY(e.getScreenY() - delta.getY());
+                    if(offset == null) {
+                        offset = new Point2D(e.getSceneX(), e.getSceneY());
+                    }
+                    stage.setX(e.getScreenX() - offset.getX());
+                    stage.setY(e.getScreenY() - offset.getY());
                 });
                 dockable.setDock(dock);
                 stage.show();
