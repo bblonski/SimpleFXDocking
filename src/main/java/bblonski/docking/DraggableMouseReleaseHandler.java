@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Control;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -84,11 +85,13 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
             if(!contains) {
                 Stage stage = new Stage(StageStyle.UNDECORATED);
                 final Dock dock = dockable.getDock().getDockController().createDock(Side.TOP);
-                stage.setScene(new Scene(dock));
+                VBox box = new VBox(dock, dock.getArea());
+                stage.setScene(new Scene(box));
                 stage.getScene().getStylesheets().addAll("docking.css");
                 dock.getChildren().add(0, dockable);
+                dock.setSelected(dockable);
                 dock.getChildren().addListener((ListChangeListener<Node>) c -> {
-                    if(dock.getChildren().isEmpty()) {
+                    if (dock.getChildren().isEmpty()) {
                         dock.getDockController().removeDock(dock);
                         stage.close();
                     }

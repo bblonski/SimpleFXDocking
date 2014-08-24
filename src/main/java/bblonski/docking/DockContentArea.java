@@ -63,7 +63,11 @@ public class DockContentArea extends BorderPane {
         this.expanded = isExpanded;
         setManaged(expanded);
         setVisible(expanded);
+    }
 
+    public void setResizeable(boolean resizeable) {
+        dragger.setManaged(resizeable);
+        dragger.setVisible(resizeable);
     }
 
     public boolean isExpanded() {

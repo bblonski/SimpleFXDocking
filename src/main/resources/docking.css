@@ -19,7 +19,7 @@
 .dock {
     -fx-background-insets: 1, 2;
     -fx-background-color: -fx-outer-border, -fx-inner-border;
-    -fx-padding: 2;
+    -fx-padding: 3;
 }
 
 .dragger {

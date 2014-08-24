@@ -1,11 +1,11 @@
 package bblonski.docking;
 
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Control;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -68,5 +68,9 @@ public class DockController {
 
     void registerDock(Dock dock) {
         docks.add(dock);
+    }
+
+    public DockingFrame getBorderPane() {
+        return new DockingFrame(this);
     }
 }
