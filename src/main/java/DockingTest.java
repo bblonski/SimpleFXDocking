@@ -1,6 +1,7 @@
 import bblonski.docking.Dock;
 import bblonski.docking.DockController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -78,6 +79,9 @@ public class DockingTest extends Application {
                         .subtract(dockBottom.getHeight())
 
         );
+        primaryStage.setOnCloseRequest(e -> {
+            Platform.exit();
+        });
     }
 
 }
