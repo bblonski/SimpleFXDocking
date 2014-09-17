@@ -85,7 +85,9 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                 dockable.setDock(dock);
                 stage.show();
             }
-            System.out.println("Release");
+            if (DockConfig.DEBUG) {
+                System.out.println("Release");
+            }
         }
     }
 }

@@ -101,6 +101,8 @@ class DraggableMouseDragHandler implements EventHandler<MouseEvent> {
             }
             previousNode = nodeOptional;
         }
-        System.out.println("Drag");
+        if (DockConfig.DEBUG) {
+            System.out.println("Drag");
+        }
     }
 }
