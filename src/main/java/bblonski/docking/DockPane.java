@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.stage.Popup;
 
 /**
  * Created by bblonski on 8/23/2014.
@@ -21,7 +21,7 @@ public class DockPane extends VBox {
         final Label title = new Label(dockable.getTitle());
         title.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(title, Priority.ALWAYS);
-        Stage stage = new Stage();
+        Popup stage = new Popup();
         final Button button = new Button("X");
         button.setOnAction(e -> dockable.getDock().setSelected(null));
         button.setStyle("-fx-font-size: 8");

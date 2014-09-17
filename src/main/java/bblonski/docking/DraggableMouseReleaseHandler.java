@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -18,11 +19,11 @@ import java.util.Optional;
  */
 public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
     private Dockable dockable;
-    private Stage dragStage;
+    private Popup dragStage;
     private Point2D offset;
     private boolean sameDock;
 
-    public DraggableMouseReleaseHandler(Dockable dockable, Stage dragStage) {
+    public DraggableMouseReleaseHandler(Dockable dockable, Popup dragStage) {
         this.dockable = dockable;
         this.dragStage = dragStage;
     }
@@ -84,6 +85,7 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                 dockable.setDock(dock);
                 stage.show();
             }
+            System.out.println("Release");
         }
     }
 }

@@ -6,7 +6,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
+import javafx.stage.Popup;
 import javafx.util.Duration;
 
 import java.util.Optional;
@@ -16,11 +16,11 @@ import java.util.Optional;
  */
 class DraggableMouseDragHandler implements EventHandler<MouseEvent> {
     private Dockable dockable;
-    private Stage dragStage;
+    private Popup dragStage;
     private Optional<Dock> dockOptional = Optional.empty();
     private Optional<Node> previousNode = Optional.empty();
 
-    public DraggableMouseDragHandler(Dockable dockable, Stage dragStage) {
+    public DraggableMouseDragHandler(Dockable dockable, Popup dragStage) {
         this.dockable = dockable;
         this.dragStage = dragStage;
         dockOptional = Optional.of(dockable.getDock());
@@ -33,7 +33,7 @@ class DraggableMouseDragHandler implements EventHandler<MouseEvent> {
         dragStage.setHeight(dockable.getControl().getHeight() + 5);
         dragStage.setX(t.getScreenX() - dragStage.getWidth() / 2);
         dragStage.setY(t.getScreenY() - dragStage.getHeight() / 2);
-        dragStage.show();
+        dragStage.show(dockable, t.getScreenX(), t.getScreenY());
         Optional<Dock> previousDock = dockOptional;
         Point2D screenPoint = new Point2D(t.getScreenX(), t.getScreenY());
         dockOptional = dockable.getDock().getDockController().getAllDocks().stream().filter(d ->
@@ -101,5 +101,6 @@ class DraggableMouseDragHandler implements EventHandler<MouseEvent> {
             }
             previousNode = nodeOptional;
         }
+        System.out.println("Drag");
     }
 }

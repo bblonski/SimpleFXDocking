@@ -6,13 +6,11 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.Popup;
 
 /**
  * Created by bblonski on 8/22/2014.
@@ -48,16 +46,15 @@ public class Dockable extends Group {
             }
         });
 
-        Stage stage = new Stage();
+        final Popup stage = new Popup();
         {
-            stage.initStyle(StageStyle.UNDECORATED);
             StackPane dragStagePane = new StackPane();
+            dragStagePane.getStylesheets().add("docking.css");
             dragStagePane.getStyleClass().addAll("tab", "dockable");
             Text dragText = new Text(getTitle());
+            stage.getContent().add(dragStagePane);
             StackPane.setAlignment(dragText, Pos.CENTER);
             dragStagePane.getChildren().add(dragText);
-            stage.setScene(new Scene(dragStagePane));
-            stage.setAlwaysOnTop(true);
         }
         button.setOnMouseDragged(new DraggableMouseDragHandler(this, stage));
         button.setOnMouseReleased(new DraggableMouseReleaseHandler(this, stage));
