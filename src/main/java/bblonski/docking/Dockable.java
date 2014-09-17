@@ -2,14 +2,11 @@ package bblonski.docking;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Popup;
 
 /**
@@ -45,17 +42,8 @@ public class Dockable extends Group {
                 getDock().setSelected(this);
             }
         });
+        Popup stage = new DragPopup(this);
 
-        final Popup stage = new Popup();
-        {
-            StackPane dragStagePane = new StackPane();
-            dragStagePane.getStylesheets().add("docking.css");
-            dragStagePane.getStyleClass().addAll("tab", "dockable");
-            Text dragText = new Text(getTitle());
-            stage.getContent().add(dragStagePane);
-            StackPane.setAlignment(dragText, Pos.CENTER);
-            dragStagePane.getChildren().add(dragText);
-        }
         button.setOnMouseDragged(new DraggableMouseDragHandler(this, stage));
         button.setOnMouseReleased(new DraggableMouseReleaseHandler(this, stage));
         this.content = new DockPane(this);

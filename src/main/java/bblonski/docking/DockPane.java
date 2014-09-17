@@ -21,7 +21,7 @@ public class DockPane extends VBox {
         final Label title = new Label(dockable.getTitle());
         title.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(title, Priority.ALWAYS);
-        Popup stage = new Popup();
+        Popup stage = new DragPopup(dockable);
         final Button button = new Button("X");
         button.setOnAction(e -> dockable.getDock().setSelected(null));
         button.setStyle("-fx-font-size: 8");
