@@ -2,16 +2,9 @@ package bblonski.docking;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Orientation;
 import javafx.geometry.Side;
-import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
-
-import java.util.List;
 
 /**
  * Created by bblonski on 8/22/2014.
@@ -27,8 +20,10 @@ public class Dock extends FlowPane {
         this.side = side;
         area = new DockContentArea(side);
         controller.registerDock(this);
-//        setStyle("-fx-border-width: 1; -fx-border-color: red");
-//        area.setStyle("-fx-border-color: yellow; -fx-border-width: 1");
+        if (DockConfig.DEBUG) {
+            setStyle("-fx-border-width: 1; -fx-border-color: red");
+            area.setStyle("-fx-border-color: yellow; -fx-border-width: 1");
+        }
         getStyleClass().add("dock");
         if(side == Side.LEFT || side == Side.RIGHT) {
             setOrientation(Orientation.VERTICAL);
