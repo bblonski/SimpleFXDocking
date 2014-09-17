@@ -2,11 +2,17 @@ package bblonski.docking;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.*;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.geometry.Side;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * Created by bblonski on 8/22/2014.
@@ -35,7 +41,7 @@ public class Dockable extends Group {
         dock.getChildren().add(this);
         button.getStyleClass().addAll("tab", "dockable");
         button.setOnMouseClicked(e -> {
-            if(this.equals(getDock().getSelected())) {
+            if (this.equals(getDock().getSelected())) {
                 getDock().setSelected(null);
             } else {
                 getDock().setSelected(this);
@@ -43,6 +49,16 @@ public class Dockable extends Group {
         });
 
         Stage stage = new Stage();
+        {
+            stage.initStyle(StageStyle.UNDECORATED);
+            StackPane dragStagePane = new StackPane();
+            dragStagePane.getStyleClass().addAll("tab", "dockable");
+            Text dragText = new Text(getTitle());
+            StackPane.setAlignment(dragText, Pos.CENTER);
+            dragStagePane.getChildren().add(dragText);
+            stage.setScene(new Scene(dragStagePane));
+            stage.setAlwaysOnTop(true);
+        }
         button.setOnMouseDragged(new DraggableMouseDragHandler(this, stage));
         button.setOnMouseReleased(new DraggableMouseReleaseHandler(this, stage));
         this.content = new DockPane(this);

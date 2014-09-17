@@ -3,14 +3,11 @@ package bblonski.docking;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -28,13 +25,6 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
     public DraggableMouseReleaseHandler(Dockable dockable, Stage dragStage) {
         this.dockable = dockable;
         this.dragStage = dragStage;
-        dragStage.initStyle(StageStyle.UNDECORATED);
-        StackPane dragStagePane = new StackPane();
-        dragStagePane.getStyleClass().addAll("tab", "dockable");
-        Text dragText = new Text(dockable.getTitle());
-        StackPane.setAlignment(dragText, Pos.CENTER);
-        dragStagePane.getChildren().add(dragText);
-        dragStage.setScene(new Scene(dragStagePane));
     }
 
     @Override
@@ -85,7 +75,7 @@ public class DraggableMouseReleaseHandler implements EventHandler<MouseEvent> {
                 });
                 dock.setOnMousePressed(e -> offset = new Point2D(e.getScreenX() - stage.getX(), e.getScreenY() - stage.getY()));
                 dock.setOnMouseDragged(e -> {
-                    if(offset == null) {
+                    if (offset == null) {
                         offset = new Point2D(e.getSceneX(), e.getSceneY());
                     }
                     stage.setX(e.getScreenX() - offset.getX());

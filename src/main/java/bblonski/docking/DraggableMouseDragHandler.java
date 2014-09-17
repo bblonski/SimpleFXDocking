@@ -29,8 +29,8 @@ class DraggableMouseDragHandler implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent t) {
-        dragStage.setWidth(dockable.getControl().getWidth() + 10);
-        dragStage.setHeight(dockable.getControl().getHeight() + 10);
+        dragStage.setWidth(dockable.getControl().getWidth() + 5);
+        dragStage.setHeight(dockable.getControl().getHeight() + 5);
         dragStage.setX(t.getScreenX() - dragStage.getWidth() / 2);
         dragStage.setY(t.getScreenY() - dragStage.getHeight() / 2);
         dragStage.show();
